@@ -1,0 +1,27 @@
+Delta V Map (make visual with Unity)
+- Click start point
+- Click end point
+- Adds delta v from map to calculate total
+- Tick/untick aerobraking for free landing on sufficiently atmospheric worlds
+- Tick/untick round trip
+- Choose from a list of spacecraft with fuel slider to see how much delta v they would generate -> changes delta v calculation values, can also change manually (next point)
+- Create own spacecraft (plug into https://strout.net/info/science/delta-v/)
+- Have an output being positive or negative if spacecraft has enough delta v to make the trip
+
+Upload to Reddit (r/space or r/RSS)
+Profit?
+
+
+assuming burns are at periapsis, and gravity assist and inclination changes are ignored
+(effectively max Delta V any transfer should cost)
+
+
+TODO
+----------------
+- Add all data
+- Spaceship UI
+- Select ship
+- Select how many stages available
+- Fuel slider
+- Payload slider
+- Output DV
