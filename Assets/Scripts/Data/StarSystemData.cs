@@ -34,8 +34,8 @@ public class StarSystemData : MonoBehaviour {
         Sol[4].AddSub("Mars", 673);
         Sol[4].AddSub("Deimos", 1009, 3);
         Sol[4].SubPositions[1].AddSub("Deimos", 649);
-        Sol[4].SubPositions[1].AddSub("Deimos (1km)", 652);
-        Sol[4].SubPositions[1].AddSub("Deimos", 656);
+        Sol[4].SubPositions[1].AddSub("Deimos (1km)", 651);
+        Sol[4].SubPositions[1].AddSub("Deimos", 655);
         Sol[4].AddSub("Phobos", 1404, 3);
         Sol[4].SubPositions[2].AddSub("Phobos", 535);
         Sol[4].SubPositions[2].AddSub("Phobos (1km)", 538);

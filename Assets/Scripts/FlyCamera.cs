@@ -29,5 +29,6 @@ public class FlyCamera : MonoBehaviour {
         }
         gameObject.transform.Translate(NewChange);
         GameObject.Find("Orbit Screen").transform.Translate(NewChange);
+        GameObject.Find("Ship Screen").transform.Translate(NewChange);
     }
 }
