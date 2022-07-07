@@ -94,7 +94,7 @@ public class SystemPosition {
         }
     }
     public void AddSub(string name, int distFromPrev, int subs = 0, bool aero = false) {
-        if (CurrentSub == 0 && Name != "Earth Capture / Escape" && Name != "Geostationary (35786km)") {
+        if (CurrentSub == 0 && Name != "Earth Capture / Escape" && Name != "Sun Transfer" && Name != "Geostationary (35786km)") {
             name += " Capture / Escape";
         } else if (CurrentSub == SubPositions.Length - 2) {
             name += " Orbit";
