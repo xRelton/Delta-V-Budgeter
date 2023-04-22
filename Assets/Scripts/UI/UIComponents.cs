@@ -45,7 +45,7 @@ public class UIScreen {
     public UIScreen(string name, int x, Transform canvas, Object objectInstance) {
         ScreenObject = (GameObject)objectInstance;
         ScreenObject.name = name;
-        ScreenObject.transform.SetParent(canvas);
+        ScreenObject.transform.SetParent(canvas.GetChild(0));
         ScreenObject.transform.position = new Vector3(x, 0, 0);
         ScreenObject.transform.localScale = new Vector3(300, 600);
         ScreenObject.GetComponent<SpriteRenderer>().sortingOrder = 1;

@@ -18,8 +18,12 @@ assuming burns are at periapsis, and gravity assist and inclination changes are 
 
 TODO
 ----------------
-- Make it so aerobrake discounts inital capture / escape and maybe adds a little more for further out, research aerobraking for this
+- button to swap departure and destination?
+- Visual indicator for where aerobraking is possible (arrow?)
+- Make it so aerobrake discounts inital capture / escape and maybe adds a little more for further out, research aerobraking for this (current adds 1/10 of cost)
+
 - Add all data (put in database / text file format, not in the code like an idiot)
+
 - Spaceship UI
 - Select ship
 - Select how many stages available

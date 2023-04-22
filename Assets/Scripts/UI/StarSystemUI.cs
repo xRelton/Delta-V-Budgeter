@@ -112,20 +112,36 @@ public class StarSystemUI : MonoBehaviour {
         }
     }
     private void SelectClick(int selectNum) {
+        List<Vector4> buttonColours = new List<Vector4> {
+            new Vector4(237, 115, 88, 255) / 255, // Changes departure position to red as starboard is red (on depature)
+            new Vector4(130, 237, 88, 255) / 255 // Changes destination position to green as starboard is green (on entry)
+        };
         List<int> OldPos = SystemController.Route[selectNum];
-        if (OldPos != null && (SystemController.Route[-(selectNum-1)] == null || !SystemController.Route[0].SequenceEqual(SystemController.Route[1]))) {
-            SystemController.GetSystemPosition(OldPos).Button.GetComponent<Image>().color = new Color(1, 1, 1);
-            if (OldPos.Count == 3) {
-                ChildrenLines[selectNum].SetActive(false);
-                SystemPosition OldPosParent = SystemController.GetSystemPosition(OldPos.Take(2).ToList());
-                if (!OldPosParent.Line.activeSelf) {
-                    SystemController.GetSystemPosition(OldPos).Button.SetActive(false);
+        if (OldPos != null) {
+            if (SystemController.Route[-(selectNum - 1)] == null || !SystemController.Route[0].SequenceEqual(SystemController.Route[1])) {
+                SystemController.GetSystemPosition(OldPos).Button.GetComponent<Image>().color = new Color(1, 1, 1); // Changes old position back to white
+                if (OldPos.Count == 3) {
+                    ChildrenLines[selectNum].SetActive(false);
+                    SystemPosition OldPosParent = SystemController.GetSystemPosition(OldPos.Take(2).ToList());
+                    if (!OldPosParent.Line.activeSelf) {
+                        SystemController.GetSystemPosition(OldPos).Button.SetActive(false);
+                    }
+                    SystemController.GetSystemPosition(OldPos).Button.transform.position = OldPosParent.Button.transform.position + new Vector3(0, -(OldPos[2] + 1) * 40);
                 }
-                SystemController.GetSystemPosition(OldPos).Button.transform.position = OldPosParent.Button.transform.position + new Vector3(0, -(OldPos[2] + 1) * 40);
+            } else if (!OldPos.SequenceEqual(SystemController.CurrentPos)) { // if OldPosition is different to NewPosition
+                SystemController.GetSystemPosition(OldPos).Button.GetComponent<Image>().color = buttonColours[-(selectNum - 1)];
             }
         }
+
         SystemController.Route[selectNum] = SystemController.CurrentPos;
-        SystemController.GetSystemPosition().Button.GetComponent<Image>().color = new Color(0.3f, 1, 0.3f);
+
+        SystemController.GetSystemPosition().Button.GetComponent<Image>().color = buttonColours[selectNum]; 
+        OrbitScreen.CanvasObjects[selectNum+2].GetComponent<Image>().color = buttonColours[selectNum];
+
+        if (SystemController.Route[-(selectNum - 1)] != null && SystemController.Route[0].SequenceEqual(SystemController.Route[1])) { // Orange thing
+            SystemController.GetSystemPosition().Button.GetComponent<Image>().color = new Vector4(255, 191, 0, 255) / 255;
+        }
+
         if (SystemController.Route[selectNum].Count == 3) {
             ChildrenLines[selectNum].SetActive(true);
             ChildrenLines[selectNum].transform.position = SystemController.GetSystemPosition(SystemController.Route[selectNum].Take(2).ToList()).Button.transform.position + new Vector3(0, -16);
