@@ -9,7 +9,7 @@ using System.Linq;
 public class SQLiteDataController : MonoBehaviour {
     public SystemPosition[] EnactDatabase() {
 		// Open connection but first creates database if not exists
-		IDbConnection dbcon = new SqliteConnection("Data Source=D:/Projects/Programming/Unity CSharp/Delta V Budgeter/Assets/Data/starsystems.db");
+		IDbConnection dbcon = new SqliteConnection($"Data Source={Application.dataPath}/Data/starsystems.db");
 		dbcon.Open();
 
 		ReformDB(dbcon);
@@ -22,7 +22,7 @@ public class SQLiteDataController : MonoBehaviour {
 	}
 	void ReformDB(IDbConnection dbcon) { // Removes tables, then Creates tables and populates them
 		IDbCommand cmnd_form = dbcon.CreateCommand();
-		cmnd_form.CommandText = "DROP TABLE StarSystems; DROP TABLE SystemPositions;" + File.ReadAllText("Assets/Data/DVBFormDatabase.sql");
+		cmnd_form.CommandText = "DROP TABLE IF EXISTS StarSystems; DROP TABLE IF EXISTS SystemPositions;" + File.ReadAllText("Assets/Data/DVBFormDatabase.sql");
 		cmnd_form.ExecuteNonQuery();
 	}
     SystemPosition[] ReadDBIntoSystem(IDbConnection dbcon) { // Read all values in table and add to SolarSystem object
