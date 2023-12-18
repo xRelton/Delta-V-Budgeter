@@ -27,6 +27,7 @@ public class StarSystemUI : MonoBehaviour {
                 SystemController.Sol[i].Button = UI.NewButton(0, 280 - i * 40, canvas, SystemController.Sol[i].Name);
             }
             SystemController.Sol[i].Button.GetComponent<Button>().onClick.AddListener(() => PosClick(a));
+            SystemController.Sol[i].Button.transform.SetSiblingIndex(1);
             for (int j = 0; j < SystemController.Sol[i].SubPositions.Length; j++) {
                 int b = j;
                 SystemPosition CurrentPosition = SystemController.Sol[i].SubPositions[j];

@@ -14,11 +14,7 @@ public class UIComponents : MonoBehaviour {
         BaseArrow = (GameObject)Resources.Load("BaseArrow");
     }
     private GameObject NewCanvasObjectWithText(GameObject newObject, int x, int y, Transform parent, string name, string content = "") {
-        if (parent.name.Contains("Button ")) {
-            newObject.transform.SetParent(GameObject.Find("Canvas").transform);
-        } else {
-            newObject.transform.SetParent(parent.transform);
-        }
+        newObject.transform.SetParent(parent.transform);
         newObject.transform.position = parent.position + new Vector3(x, y);
         newObject.name = "Button " + name;
         if (content != "") {
