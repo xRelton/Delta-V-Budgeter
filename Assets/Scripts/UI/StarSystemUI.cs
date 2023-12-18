@@ -18,7 +18,7 @@ public class StarSystemUI : MonoBehaviour {
         FormOrbitUI(transform);
     }
     private void FormSystemMap(Transform canvas) {
-        SystemController.Sol = GetComponent<StarSystemData>().SolarSystem();
+        SystemController.Sol = GetComponent<SQLiteDataController>().EnactDatabase();
         for (int i = 0; i < SystemController.Sol.Length; i++) {
             int a = i;
             if (SystemController.Sol[i].Name == "Earth Capture / Escape") {
@@ -45,7 +45,7 @@ public class StarSystemUI : MonoBehaviour {
                     CurrentPosition.Button.GetComponent<Button>().onClick.AddListener(() => PosClick(a, b));
                 }
             }
-            SystemController.Sol[i].Line = UI.NewLine(SystemController.Sol[i].SubPositions.Length, ((2 * (i % 2)) - 1), true, SystemController.Sol[i].Button.transform);
+            SystemController.Sol[i].Line = UI.NewLine(SystemController.Sol[i].SubPositions.Length, ((2 * (i % 2)) - 1), true, SystemController.Sol[i].Button.transform, SystemController.Sol[i].Aero);
         }
         GameObject SpineLine = UI.NewLine(SystemController.Sol.Length, -1, false, SystemController.Sol[0].Button.transform);
         for (int i = 0; i < ChildrenLines.Length; i++) {
@@ -56,32 +56,48 @@ public class StarSystemUI : MonoBehaviour {
     private void FormOrbitUI(Transform canvas) {
         OrbitScreen = new UIScreen("Orbit Screen", 527, canvas, Instantiate(Resources.Load("BaseSquare")));
         OrbitScreen.CanvasObjects.Add(UI.NewText(0, 200, OrbitScreen.UICanvas.transform, "PosName", SystemController.GetSystemPosition().Name));
-        OrbitScreen.CanvasObjects.Add(UI.NewText(0, -200, OrbitScreen.UICanvas.transform, "DVCount", "Delta V not available"));
+        OrbitScreen.CanvasObjects.Add(UI.NewText(0, -220, OrbitScreen.UICanvas.transform, "DVCount", "Delta V not available"));
         OrbitScreen.CanvasObjects.Add(UI.NewButton(0, 20, OrbitScreen.UICanvas.transform, "Select Departure"));
         OrbitScreen.CanvasObjects.Add(UI.NewButton(0, -20, OrbitScreen.UICanvas.transform, "Select Destination"));
-        OrbitScreen.CanvasObjects.Add(UI.NewButton(0, -80, OrbitScreen.UICanvas.transform, "Aerobrake [  ]"));
-        OrbitScreen.CanvasObjects.Add(UI.NewButton(0, -120, OrbitScreen.UICanvas.transform, "Roundtrip [  ]"));
+        OrbitScreen.CanvasObjects.Add(UI.NewButton(0, -50, OrbitScreen.UICanvas.transform, "Swap"));
+        OrbitScreen.CanvasObjects.Add(UI.NewButton(0, -100, OrbitScreen.UICanvas.transform, "Aerobrake [  ]"));
+        OrbitScreen.CanvasObjects.Add(UI.NewButton(0, -140, OrbitScreen.UICanvas.transform, "Roundtrip [  ]"));
         OrbitScreen.CanvasObjects[2].GetComponent<Button>().onClick.AddListener(() => SelectClick(0));
         OrbitScreen.CanvasObjects[3].GetComponent<Button>().onClick.AddListener(() => SelectClick(1));
-        OrbitScreen.CanvasObjects[4].GetComponent<RectTransform>().sizeDelta -= new Vector2(40, 0);
+        OrbitScreen.CanvasObjects[4].GetComponent<Button>().onClick.AddListener(() => SwapClick());
+        OrbitScreen.CanvasObjects[5].GetComponent<Button>().onClick.AddListener(() => AeroClick());
+        OrbitScreen.CanvasObjects[6].GetComponent<Button>().onClick.AddListener(() => RoundClick());
+        OrbitScreen.CanvasObjects[4].GetComponent<RectTransform>().sizeDelta -= new Vector2(100, 10);
         OrbitScreen.CanvasObjects[5].GetComponent<RectTransform>().sizeDelta -= new Vector2(40, 0);
-        OrbitScreen.CanvasObjects[4].GetComponent<Button>().onClick.AddListener(() => AeroClick());
-        OrbitScreen.CanvasObjects[5].GetComponent<Button>().onClick.AddListener(() => RoundClick());
+        OrbitScreen.CanvasObjects[6].GetComponent<RectTransform>().sizeDelta -= new Vector2(40, 0);
+    }
+    private void SwapClick() {
+        List<Vector4> buttonColours = new List<Vector4> {
+            new Vector4(237, 115, 88, 255) / 255, // Changes departure position to red as starboard is red (on depature)
+            new Vector4(130, 237, 88, 255) / 255 // Changes destination position to green as starboard is green (on entry)
+        };
+        List<int> Departure = SystemController.Route[0];
+        List<int> Destination = SystemController.Route[1];
+        SystemController.Route[0] = Destination;
+        SystemController.Route[1] = Departure;
+        SystemController.GetSystemPosition(Departure).Button.GetComponent<Image>().color = buttonColours[1];
+        SystemController.GetSystemPosition(Destination).Button.GetComponent<Image>().color = buttonColours[0];
+        OrbitScreen.CanvasObjects[1].GetComponent<Text>().text = "Delta V: " + SystemController.GetRouteDV();
     }
     private void AeroClick() {
         if (SystemController.Aerobrake) {
-            OrbitScreen.CanvasObjects[4].GetComponentInChildren<Text>().text = "Aerobrake [  ]";
+            OrbitScreen.CanvasObjects[5].GetComponentInChildren<Text>().text = "Aerobrake [  ]";
         } else {
-            OrbitScreen.CanvasObjects[4].GetComponentInChildren<Text>().text = "Aerobrake [X]";
+            OrbitScreen.CanvasObjects[5].GetComponentInChildren<Text>().text = "Aerobrake [X]";
         }
         SystemController.Aerobrake = !SystemController.Aerobrake;
         OrbitScreen.CanvasObjects[1].GetComponent<Text>().text = "Delta V: " + SystemController.GetRouteDV();
     }
     private void RoundClick() {
         if (SystemController.Roundtrip) {
-            OrbitScreen.CanvasObjects[5].GetComponentInChildren<Text>().text = "Roundtrip [  ]";
+            OrbitScreen.CanvasObjects[6].GetComponentInChildren<Text>().text = "Roundtrip [  ]";
         } else {
-            OrbitScreen.CanvasObjects[5].GetComponentInChildren<Text>().text = "Roundtrip [X]";
+            OrbitScreen.CanvasObjects[6].GetComponentInChildren<Text>().text = "Roundtrip [X]";
         }
         SystemController.Roundtrip = !SystemController.Roundtrip;
         OrbitScreen.CanvasObjects[1].GetComponent<Text>().text = "Delta V: " + SystemController.GetRouteDV();

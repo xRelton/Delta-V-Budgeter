@@ -18,11 +18,11 @@ assuming burns are at periapsis, and gravity assist and inclination changes are 
 
 TODO
 ----------------
-- button to swap departure and destination?
-- Visual indicator for where aerobraking is possible (arrow?)
-- Make it so aerobrake discounts inital capture / escape and maybe adds a little more for further out, research aerobraking for this (current adds 1/10 of cost)
+- Visual indicator for where aerobraking is possible (arrow?) -- just need to add moon compatibility for this
+- Make it so aerobrake discounts inital capture / escape and maybe adds a little more for further out, research aerobraking for this (current makes cost 1/10 of original)
 
 - Add all data (put in database / text file format, not in the code like an idiot)
+- Add extra Venus and maybe gas giant position "high atmosphere"
 
 - Spaceship UI
 - Select ship
@@ -30,3 +30,32 @@ TODO
 - Fuel slider
 - Payload slider
 - Output DV
+
+Aerobraking down-well
+----------------
+From Transfer:
+ - Capture / Escape is same
+From Capture / Escape or transfer or any other orbit:
+ - Down to any point is: {1/2 down to orbit (burn only at apogee, no need at perigee) + extra to hit atmosphere} + [extra to leave atmosphere + 1/2 back to orbit (burn back to desired orbit)]
+[] not required if being captured by another body i.e. a moon, in fact any moon transfer its not required for, also the 1/2 back to orbit is 0 if going to low orbit
+For surface landing [] becomes extra to land
+
+From another body:
+ - value to transfer + [] value and thats its
+
+
+
+
+{ 1/2 down to orbit (burn only at apogee, no need at perigee) + extra to hit atmosphere }
++
+[ extra to leave atmosphere + 1/2 back to orbit (burn back to desired orbit) ]
+
+Origin options: - deals with stuff outside of []
+ - Above aero section (+1)	(1. discounts {} and adds transfer to parent)						<------- SORTED
+ - Transfer			(4. capture + {} // for earth do not add capture val as already done in system master)
+ - Inner orbit			(5. {})
+
+Destination options: (Sort in calculate delta v, except maybe moon stuff) - deals with []
+ - Surface, high atmosphere	(6. discounts [] and adds extra to land)
+ - Inner orbit			(2. [])
+ - Below aero section (+2)	(3. discounts [] and adds moon children)
